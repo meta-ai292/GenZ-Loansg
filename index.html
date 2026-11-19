@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Z‑LOAN · Gen Z loan request</title>
+  <style>
+    /* global reset & gen z inspired theme */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #0b0e14 0%, #141a24 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* card – glassmorphism + soft glow */
+    .loan-card {
+      max-width: 580px;
+      width: 100%;
+      background: rgba(18, 22, 30, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(120, 255, 200, 0.15);
+      border-radius: 2.5rem;
+      padding: 2.2rem 1.8rem;
+      box-shadow: 0 25px 45px -10px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(0, 255, 180, 0.1) inset;
+      transition: transform 0.2s ease;
+    }
+
+    .loan-card:hover {
+      transform: scale(1.01);
+    }
+
+    /* header – bold, fresh */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.8rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 8px #3ef7b0);
+    }
+
+    .logo-text {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, #f0ffe0, #b5ffd0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
+    }
+
+    .badge {
+      background: #2affb0;
+      color: #0a0e12;
+      font-weight: 700;
+      font-size: 0.7rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 50px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px #2affb0aa;
+      border: 1px solid #ffffff30;
+    }
+
+    /* intro */
+    .intro {
+      margin-bottom: 2rem;
+      padding: 0 0.2rem;
+    }
+
+    .intro h1 {
+      color: #ffffff;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+
+    .intro h1 span {
+      background: linear-gradient(135deg, #d4ffb0, #7effc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .intro p {
+      color: #a0b3c6;
+      font-size: 0.95rem;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .intro p .emoji {
+      font-size: 1.2rem;
+    }
+
+    /* form */
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      color: #cddcec;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      margin-left: 0.3rem;
+    }
+
+    label .optional {
+      color: #6c7f91;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.7rem;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1.5px solid #2b3847;
+      border-radius: 2rem;
+      padding: 0.1rem 0.1rem 0.1rem 1.4rem;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: #37ffb0;
+      box-shadow: 0 0 0 3px rgba(55, 255, 176, 0.2);
+    }
+
+    .input-wrapper i {
+      font-style: normal;
+      font-size: 1.2rem;
+      margin-right: 0.6rem;
+      color: #47ffb6;
+      opacity: 0.8;
+      filter: drop-shadow(0 0 6px #47ffb6);
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 1rem 1rem 1rem 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #ffffff;
+      letter-spacing: 0.3px;
+    }
+
+    .input-wrapper input::placeholder {
+      color: #5f6f80;
+      font-weight: 400;
+      font-size: 0.9rem;
+    }
+
+    /* pin specific — 4-6 digits */
+    .pin-hint {
+      font-size: 0.7rem;
+      color: #7a8e9e;
+      margin-top: 0.4rem;
+      margin-left: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .pin-hint span {
+      background: #1e2c3a;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      color: #b0fecd;
+    }
+
+    /* button – vibrant, gen z */
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(95deg, #12f7a0, #0ad6c0);
+      border: none;
+      padding: 1.1rem 0;
+      border-radius: 3rem;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0b0f14;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      cursor: pointer;
+      box-shadow: 0 12px 25px -8px #00ffb3, 0 0 0 1.5px #aaffdd inset;
+      transition: all 0.2s ease;
+      margin-top: 2rem;
+      text-transform: uppercase;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(95deg, #1effb0, #18f0d0);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 30px -8px #0affb0, 0 0 0 2px #ffffff80 inset;
+    }
+
+    .btn-primary:active {
+      transform: translateY(2px);
+      box-shadow: 0 6px 15px -5px #00ffb0;
+    }
+
+    /* legal / tiny trust note */
+    .trust-note {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+      font-size: 0.65rem;
+      color: #7c8e9f;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+
+    .trust-note .dot {
+      width: 4px;
+      height: 4px;
+      background: #2affb0;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* message feedback */
+    .message {
+      margin-top: 1.5rem;
+      padding: 0.9rem 1.2rem;
+      border-radius: 3rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      background: #1d2b36;
+      color: #a0f0d0;
+      border-left: 4px solid #2affb0;
+      transition: 0.2s;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: #2e1d24;
+      color: #ffb0b0;
+      border-left-color: #ff4d6d;
+    }
+
+    /* gen z tiny details */
+    .emoji-badge {
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0.7; transform: scale(1); }
+    }
+
+    /* responsive */
+    @media (max-width: 480px) {
+      .loan-card {
+        padding: 1.8rem 1.2rem;
+        border-radius: 2rem;
+      }
+      .logo-text { font-size: 1.6rem; }
+      .intro h1 { font-size: 1.5rem; }
+      .btn-primary { font-size: 0.95rem; padding: 1rem 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loan-card">
+    <!-- Header: logo + genz badge -->
+    <div class="header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Z‑LOAN</span>
+      </div>
+      <div class="badge">no cap</div>
+    </div>
+
+    <!-- Intro text -->
+    <div class="intro">
+      <h1>Need <span>fast cash</span>?<br>We got you, bestie.</h1>
+      <p>
+        <span class="emoji">🫶</span> Request alone · enter your pin · get sorted
+      </p>
+    </div>
+
+    <!-- Loan request form -->
+    <form id="loanForm" action="javascript:void(0);">
+      <!-- Full name as in ID -->
+      <div class="form-group">
+        <label for="fullName">Full name <span class="optional">(as on ID)</span></label>
+        <div class="input-wrapper">
+          <i>🪪</i>
+          <input type="text" id="fullName" name="fullName" placeholder="e.g. Jordan Lee Smith" autocomplete="name" required>
+        </div>
+      </div>
+
+      <!-- ID / unique identifier (people request alone – could be national ID or account) -->
+      <div class="form-group">
+        <label for="idNumber">ID number <span class="optional">(passport / national ID)</span></label>
+        <div class="input-wrapper">
+          <i>🔢</i>
+          <input type="text" id="idNumber" name="idNumber" placeholder="e.g. 9201015800087" autocomplete="off" required>
+        </div>
+      </div>
+
+      <!-- PIN code – 4 to 6 digits (exactly as requested: "Impress a pin there") -->
+      <div class="form-group">
+        <label for="pinCode">Create a 5‑digit PIN</label>
+        <div class="input-wrapper">
+          <i>🔐</i>
+          <input type="password" id="pinCode" name="pinCode" placeholder="•••••" inputmode="numeric" maxlength="5" pattern="\d{5}" autocomplete="off" required>
+        </div>
+        <div class="pin-hint">
+          <span>🔒</span> Exactly 5 digits · keep it private
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn-primary" id="submitBtn">
+        <span>Request loan</span>
+        <span>💸</span>
+      </button>
+
+      <!-- feedback message area -->
+      <div id="formMessage" class="message"></div>
+    </form>
+
+    <!-- trust / tiny legal -->
+    <div class="trust-note">
+      <span>🔒 256-bit encrypted</span>
+      <span class="dot"></span>
+      <span>⚡ instant review</span>
+      <span class="dot"></span>
+      <span>💚 no hidden fees</span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const form = document.getElementById('loanForm');
+      const fullNameInput = document.getElementById('fullName');
+      const idNumberInput = document.getElementById('idNumber');
+      const pinInput = document.getElementById('pinCode');
+      const messageDiv = document.getElementById('formMessage');
+      const submitBtn = document.getElementById('submitBtn');
+
+      // helper to show messages
+      function showMessage(text, isError = false) {
+        messageDiv.textContent = text;
+        messageDiv.classList.add('show');
+        if (isError) {
+          messageDiv.classList.add('error');
+        } else {
+          messageDiv.classList.remove('error');
+        }
+        // auto hide after 5 sec (but keep if error maybe? still hide)
+        setTimeout(() => {
+          messageDiv.classList.remove('show', 'error');
+        }, 5000);
+      }
+
+      // validate pin: exactly 5 digits
+      function isValidPin(pin) {
+        return /^\d{5}$/.test(pin);
+      }
+
+      // validate full name: at least two words, letters/spaces, not too short
+      function isValidFullName(name) {
+        const trimmed = name.trim();
+        // at least 2 characters, must contain letters and spaces, no weird symbols
+        if (trimmed.length < 3) return false;
+        // letters, spaces, hyphens, apostrophes (common in names)
+        const nameRegex = /^[A-Za-zÀ-ÿ'\- ]{3,}$/;
+        if (!nameRegex.test(trimmed)) return false;
+        // require at least two parts (first + last)
+        const parts = trimmed.split(/\s+/);
+        return parts.length >= 2 && parts.every(p => p.length > 0);
+      }
+
+      // validate ID: at least 5 chars, alphanumeric, not empty
+      function isValidId(id) {
+        return id.trim().length >= 5 && /^[A-Za-z0-9\-]+$/.test(id.trim());
+      }
+
+      // live pin input: only digits allowed
+      pinInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/\D/g, '').slice(0, 5);
+      });
+
+      // form submission
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const fullName = fullNameInput.value.trim();
+        const idNumber = idNumberInput.value.trim();
+        const pin = pinInput.value.trim();
+
+        // validation checks
+        if (!isValidFullName(fullName)) {
+          showMessage('❌ Enter your full name as it appears on your ID (first + last name).', true);
+          fullNameInput.focus();
+          return;
+        }
+
+        if (!isValidId(idNumber)) {
+          showMessage('❌ ID number must be at least 5 characters (letters/numbers).', true);
+          idNumberInput.focus();
+          return;
+        }
+
+        if (!isValidPin(pin)) {
+          showMessage('❌ PIN must be exactly 5 digits (numbers only).', true);
+          pinInput.focus();
+          return;
+        }
+
+        // simulate successful loan request
+        // disable button temporarily to prevent double-submit
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
+        submitBtn.innerHTML = '<span>Processing...</span> <span>⏳</span>';
+
+        // create a request object (in real app you'd send to backend)
+        const loanRequest = {
+          fullName: fullName,
+          idNumber: idNumber,
+          pin: pin,      // never store raw pin in production! this is just for demo
+          requestedAt: new Date().toISOString()
+        };
+        console.log('🔐 Loan request:', loanRequest); // for demo only
+
+        // simulate network delay
+        setTimeout(() => {
+          // reset button
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.innerHTML = '<span>Request loan</span> <span>💸</span>';
+
+          // show success message
+          showMessage(`✅ Yo ${fullName.split(' ')[0]}! Your loan request is in. We'll ping you.`, false);
+
+          // optionally clear the form? We'll keep data but clear pin for security
+          pinInput.value = '';
+          // for demo we keep full name & ID, but clear pin and message
+          // you can decide. We'll clear only PIN to show security practice
+          // (also reset focus)
+          pinInput.focus();
+
+          // maybe reset after? fine.
+        }, 1400);
+      });
+
+      // extra: clear error state on input
+      [fullNameInput, idNumberInput, pinInput].forEach(input => {
+        input.addEventListener('input', function() {
+          messageDiv.classList.remove('show', 'error');
+        });
+      });
+
+      // initial focus (nice for desktop)
+      window.addEventListener('load', () => {
+        fullNameInput.focus();
+      });
+    })();
+  </script>
+</body>
+</html>
